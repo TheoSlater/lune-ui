@@ -1,20 +1,26 @@
 {
-  "name": "with-tailwind",
+  "name": "vite-monorepo",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "typecheck": "turbo typecheck"
   },
   "devDependencies": {
-    "prettier": "3.9.6",
-    "prettier-plugin-tailwindcss": "0.8.1",
-    "turbo": "^2.10.12"
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "turbo": "^2.9.18",
+    "typescript": "~6"
   },
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "npm@11.19.0",
   "engines": {
-    "node": ">=24"
-  }
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
