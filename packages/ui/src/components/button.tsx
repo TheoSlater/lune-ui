@@ -9,7 +9,8 @@ import { cn } from "@workspace/ui/lib/utils";
 
 const buttonVariants = cva(
   [
-    "group/button inline-flex shrink-0 transform-gpu items-center justify-center",
+    // Keep the animated button on a stable compositor layer to avoid text jitter.
+    "group/button inline-flex shrink-0 transform-gpu will-change-transform items-center justify-center",
     "whitespace-nowrap rounded-lg border border-transparent bg-clip-padding",
     "text-sm font-medium antialiased outline-none select-none",
 
@@ -178,6 +179,10 @@ function Button({
     <ButtonPrimitive
       render={
         <motion.button
+          style={{
+            WebkitFontSmoothing: "antialiased",
+            MozOsxFontSmoothing: "grayscale",
+          }}
           whileTap={isMotionDisabled ? undefined : { scale: 0.96 }}
           transition={{
             type: "spring",
