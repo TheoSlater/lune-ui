@@ -1,0 +1,9 @@
+
+> web@0.0.1 format
+> prettier --write "**/*.{ts,tsx}"
+
+src/App.tsx 57ms (unchanged)
+src/component-registry.tsx 44ms (unchanged)
+src/components/theme-provider.tsx 22ms (unchanged)
+src/main.tsx 2ms (unchanged)
+vite.config.ts 3ms (unchanged)

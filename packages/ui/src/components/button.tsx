@@ -1,21 +1,22 @@
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
-import { cva, type VariantProps } from "class-variance-authority"
+"use client";
 
-import { cn } from "@workspace/ui/lib/utils"
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
+import { cva, type VariantProps } from "class-variance-authority";
+import { LoaderCircle } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+
+import { cn } from "@workspace/ui/lib/utils";
 
 const buttonVariants = cva(
   [
-    "group/button inline-flex shrink-0 items-center justify-center",
+    "group/button inline-flex shrink-0 transform-gpu items-center justify-center",
     "whitespace-nowrap rounded-lg border border-transparent bg-clip-padding",
-    "text-sm font-medium outline-none select-none",
+    "text-sm font-medium antialiased outline-none select-none",
 
-    // Motion
-    "transition-[color,background-color,border-color,box-shadow,transform,opacity]",
+    // Keep paint properties smooth; Motion owns the press transform.
+    "transition-[color,background-color,border-color,box-shadow,opacity]",
     "duration-(--motion-duration-fast)",
     "ease-(--motion-ease-standard)",
-
-    // Interaction
-    "active:not-aria-[haspopup]:scale-(--motion-scale-press)",
 
     // Focus
     "focus-visible:border-ring",
@@ -36,7 +37,6 @@ const buttonVariants = cva(
 
     // Accessibility
     "motion-reduce:transition-none",
-    "motion-reduce:active:scale-100",
   ],
   {
     variants: {
@@ -44,7 +44,9 @@ const buttonVariants = cva(
         default: [
           "bg-primary",
           "text-primary-foreground",
+          "shadow-xs",
           "hover:bg-primary/90",
+          "hover:shadow-sm",
         ],
 
         secondary: [
@@ -82,11 +84,7 @@ const buttonVariants = cva(
           "focus-visible:ring-destructive/20",
         ],
 
-        link: [
-          "text-primary",
-          "underline-offset-4",
-          "hover:underline",
-        ],
+        link: ["text-primary", "underline-offset-4", "hover:underline"],
       },
 
       size: {
@@ -101,6 +99,7 @@ const buttonVariants = cva(
         xs: [
           "h-6",
           "gap-1",
+          "[&>span]:gap-1",
           "px-2",
           "text-xs",
           "rounded-[min(var(--radius-md),10px)]",
@@ -113,6 +112,7 @@ const buttonVariants = cva(
         sm: [
           "h-7",
           "gap-1",
+          "[&>span]:gap-1",
           "px-2.5",
           "text-[0.8rem]",
           "rounded-[min(var(--radius-md),12px)]",
@@ -154,21 +154,62 @@ const buttonVariants = cva(
       size: "default",
     },
   },
-)
+);
 
 function Button({
   className,
   variant = "default",
   size = "default",
+  loading = false,
+  disabled,
+  static: staticMotion = false,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    loading?: boolean;
+    /** Disable press motion for controls where movement would distract. */
+    static?: boolean;
+  }) {
+  const prefersReducedMotion = useReducedMotion();
+  const isDisabled = disabled || loading;
+  const isMotionDisabled = prefersReducedMotion || isDisabled || staticMotion;
+
   return (
     <ButtonPrimitive
+      render={
+        <motion.button
+          whileTap={isMotionDisabled ? undefined : { scale: 0.96 }}
+          transition={{
+            type: "spring",
+            duration: 0.3,
+            bounce: 0,
+          }}
+        />
+      }
       data-slot="button"
+      data-loading={loading ? "" : undefined}
       className={cn(buttonVariants({ variant, size, className }))}
+      disabled={isDisabled}
+      aria-busy={loading || undefined}
       {...props}
-    />
-  )
+    >
+      {loading && (
+        <LoaderCircle
+          aria-hidden="true"
+          data-icon="inline-start"
+          className="absolute size-4 animate-spin motion-reduce:animate-none"
+        />
+      )}
+      <span
+        className={cn(
+          "inline-flex items-center gap-1.5",
+          loading && "opacity-0",
+        )}
+      >
+        {props.children}
+      </span>
+    </ButtonPrimitive>
+  );
 }
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };

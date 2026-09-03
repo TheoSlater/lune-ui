@@ -1,0 +1,62 @@
+/*
+ * Shared Lune motion language.
+ *
+ * These values are intentionally independent from theme colors.
+ * Components should reuse these instead of inventing durations/easing.
+ */
+:root {
+  --motion-duration-fast: 120ms;
+  --motion-duration-normal: 220ms;
+  --motion-duration-slow: 320ms;
+
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-spring: cubic-bezier(0.22, 1.08, 0.36, 1);
+  --motion-ease-spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Shared surface timings keep state changes quiet and predictable. */
+  --motion-dialog-duration: var(--motion-duration-normal);
+  --motion-dialog-ease: var(--motion-ease-spring);
+}
+
+/*
+ * Presence transitions keep the popup's centering transform intact. The
+ * animate-in utilities also write transform, which can briefly reset a
+ * centered popup during open/close and produce a visible jump.
+ */
+[data-slot="dialog-overlay"] {
+  opacity: 0;
+  transition: opacity var(--motion-dialog-duration) var(--motion-dialog-ease);
+}
+
+[data-slot="dialog-overlay"][data-open] {
+  opacity: 1;
+}
+
+[data-slot="dialog-content"] {
+  opacity: 0;
+  scale: 0.96;
+  transform-origin: center;
+  transition:
+    opacity var(--motion-dialog-duration) var(--motion-dialog-ease),
+    scale var(--motion-dialog-duration) var(--motion-dialog-ease);
+}
+
+[data-slot="dialog-content"][data-open] {
+  opacity: 1;
+  scale: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-fast: 0ms;
+    --motion-duration-normal: 0ms;
+    --motion-duration-slow: 0ms;
+
+    --motion-dialog-duration: 0ms;
+  }
+
+  [data-slot="dialog-overlay"],
+  [data-slot="dialog-content"] {
+    transition: none;
+  }
+}

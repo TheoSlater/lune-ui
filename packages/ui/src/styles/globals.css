@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "./motion.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -97,32 +98,6 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-
-  /* Motion */
-  --ease-standard: var(--motion-ease-standard);
-  --ease-out: var(--motion-ease-out);
-  --ease-spring: var(--motion-ease-spring);
-}
-
-/*
- * Shared Lune motion language.
- *
- * These values are intentionally independent from theme colors.
- * Components should reuse these instead of inventing durations/easing.
- */
-:root {
-  --motion-duration-instant: 80ms;
-  --motion-duration-fast: 120ms;
-  --motion-duration-quick: 160ms;
-  --motion-duration-normal: 220ms;
-  --motion-duration-slow: 320ms;
-
-  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --motion-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --motion-scale-press: 0.97;
-  --motion-scale-enter: 0.98;
 }
 
 /*
@@ -231,22 +206,5 @@
 
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-/*
- * Reduced motion is a system-wide capability, not something every
- * Lune component should need to independently reinvent.
- */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --motion-duration-instant: 0ms;
-    --motion-duration-fast: 0ms;
-    --motion-duration-quick: 0ms;
-    --motion-duration-normal: 0ms;
-    --motion-duration-slow: 0ms;
-
-    --motion-scale-press: 1;
-    --motion-scale-enter: 1;
   }
 }
