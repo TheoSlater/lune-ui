@@ -24,26 +24,32 @@
  * centered popup during open/close and produce a visible jump.
  */
 [data-slot="dialog-overlay"] {
-  opacity: 0;
-  transition: opacity var(--motion-dialog-duration) var(--motion-dialog-ease);
+  opacity: 1;
+  transition:
+    opacity var(--motion-dialog-duration) var(--motion-dialog-ease),
+    backdrop-filter var(--motion-dialog-duration) var(--motion-dialog-ease);
+  backdrop-filter: blur(8px);
 }
 
-[data-slot="dialog-overlay"][data-open] {
-  opacity: 1;
+[data-slot="dialog-overlay"][data-starting-style],
+[data-slot="dialog-overlay"][data-ending-style] {
+  opacity: 0;
+  backdrop-filter: blur(0);
 }
 
 [data-slot="dialog-content"] {
-  opacity: 0;
-  scale: 0.96;
+  opacity: 1;
+  scale: 1;
   transform-origin: center;
   transition:
     opacity var(--motion-dialog-duration) var(--motion-dialog-ease),
     scale var(--motion-dialog-duration) var(--motion-dialog-ease);
 }
 
-[data-slot="dialog-content"][data-open] {
-  opacity: 1;
-  scale: 1;
+[data-slot="dialog-content"][data-starting-style],
+[data-slot="dialog-content"][data-ending-style] {
+  opacity: 0;
+  scale: 0.96;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -58,5 +64,9 @@
   [data-slot="dialog-overlay"],
   [data-slot="dialog-content"] {
     transition: none;
+  }
+
+  [data-slot="dialog-overlay"] {
+    backdrop-filter: none;
   }
 }
